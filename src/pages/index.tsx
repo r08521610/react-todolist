@@ -1,54 +1,38 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useLocalStorage } from 'react-use'
 import { ITodo } from '../types';
 
 const Home = () => {
-  const [todos, setTodos] = useState<ITodo[]>([]);
+  const [todos, setTodos] = useLocalStorage<ITodo[]>('todos', []);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
-  const save = useCallback(
-    (todos: ITodo[]) => {
-      localStorage.setItem('todos', JSON.stringify(todos));
-    },
-    [todos]
-  );
-
   const addTodo = useCallback(() => {
-    const data = [...todos, { title, description, done: false }];
+    const data = [...todos ?? [], { title, description, done: false }];
     setTodos(data);
-    save(data);
     setTitle('');
     setDescription('');
-  }, [todos, title, description, save]);
+  }, [todos, title, description]);
 
   const removeTodo = useCallback(
     (item: ITodo) => {
-      const data = [...todos.filter((todo) => todo.title !== item.title)];
+      const data = [...(todos ?? []).filter((todo) => todo.title !== item.title)];
       setTodos(data);
-      save(data);
     },
-    [todos, save]
+    [todos]
   );
 
   const toggleDone = useCallback(
     (todo: ITodo, checked: boolean) => {
       const data = [
-        ...todos.map((item) =>
+        ...(todos??[]).map((item) =>
           item.title === todo.title ? { ...item, done: checked } : item
         ),
       ];
       setTodos(data);
-      save(data);
     },
-    [todos, save]
+    [todos]
   );
-
-  useEffect(() => {
-    const data = localStorage.getItem('todos');
-    if (data) {
-      setTodos(JSON.parse(data));
-    }
-  }, []);
 
   return (
     <div>
