@@ -1,26 +1,25 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
+import { RootContext } from '../store';
 import { ITodo } from '../types';
 
-interface IProps {
-  todos?: ITodo[]
-  setTodos: (todos: ITodo[]) => void
-}
-
-const Home = ({todos, setTodos}: IProps) => {
+const Home = () => {
+  const { todos, setTodos } = useContext(RootContext);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
   const addTodo = useCallback(() => {
-    const data = [...todos ?? [], { title, description, done: false }];
-    setTodos(data);
+    const data = [...(todos ?? []), { title, description, done: false }];
+    setTodos?.(data);
     setTitle('');
     setDescription('');
   }, [todos, title, description]);
 
   const removeTodo = useCallback(
     (item: ITodo) => {
-      const data = [...(todos ?? []).filter((todo) => todo.title !== item.title)];
-      setTodos(data);
+      const data = [
+        ...(todos ?? []).filter((todo) => todo.title !== item.title),
+      ];
+      setTodos?.(data);
     },
     [todos]
   );
@@ -28,11 +27,11 @@ const Home = ({todos, setTodos}: IProps) => {
   const toggleDone = useCallback(
     (todo: ITodo, checked: boolean) => {
       const data = [
-        ...(todos??[]).map((item) =>
+        ...(todos ?? []).map((item) =>
           item.title === todo.title ? { ...item, done: checked } : item
         ),
       ];
-      setTodos(data);
+      setTodos?.(data);
     },
     [todos]
   );
