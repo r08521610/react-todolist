@@ -1,4 +1,5 @@
 import { useCallback, useContext, useState } from 'react';
+import TodoItem from '../components/TodoItem';
 import { RootContext } from '../store';
 import { ITodo } from '../types';
 
@@ -54,15 +55,13 @@ const Home = () => {
       ></textarea>
       <ul>
         {todos?.map((todo) => (
-          <li key={todo.title} className='todolist-item'>
-            <input
-              type='checkbox'
-              checked={todo.done}
-              onChange={(e) => toggleDone(todo, e.target.checked)}
-            />
-            {todo.title}
-            <button onClick={() => removeTodo(todo)}>x</button>
-          </li>
+          <TodoItem
+            key={todo.title}
+            title={todo.title}
+            checked={todo.done}
+            onChecked={(checked) => toggleDone(todo, checked)}
+            onDelete={() => removeTodo(todo)}
+          />
         ))}
       </ul>
     </div>
