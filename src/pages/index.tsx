@@ -1,9 +1,12 @@
-import { useCallback, useEffect, useState } from 'react';
-import { useLocalStorage } from 'react-use'
+import { useCallback, useState } from 'react';
 import { ITodo } from '../types';
 
-const Home = () => {
-  const [todos, setTodos] = useLocalStorage<ITodo[]>('todos', []);
+interface IProps {
+  todos?: ITodo[]
+  setTodos: (todos: ITodo[]) => void
+}
+
+const Home = ({todos, setTodos}: IProps) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
