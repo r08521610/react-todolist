@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ITodo } from '../types';
 
 const Home = () => {
@@ -42,6 +42,13 @@ const Home = () => {
     },
     [todos, save]
   );
+
+  useEffect(() => {
+    const data = localStorage.getItem('todos');
+    if (data) {
+      setTodos(JSON.parse(data));
+    }
+  }, []);
 
   return (
     <div>
